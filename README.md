@@ -10,6 +10,12 @@ A modern, semantically-aware WordPress theme powered by **ReScript**, **Deno**, 
 - 🔒 **Type Safety**: ReScript-only architecture (NO TypeScript)
 - ⚡ **Performance**: Rust-powered WASM semantic processor
 - 🎨 **Modern Stack**: Deno + Fresh framework for server-side rendering
+- 🤖 **Theme Transpilation System** (🚧 WIP): Automatically extract and recreate WordPress themes
+  - Web scraper with license detection
+  - Schema-based transformation (Cue/Nix)
+  - Haskell → ReScript transpiler
+  - ML-powered learning (LSM + Julia + Logtalk)
+  - See [THEME_TRANSPILATION_ARCHITECTURE.md](THEME_TRANSPILATION_ARCHITECTURE.md)
 
 ## Quick Start
 
