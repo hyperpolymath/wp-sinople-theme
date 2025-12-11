@@ -1,76 +1,189 @@
-= wp-sinople-theme
-Jonathan D.A. Jewell <jonathan.jewell@gmail.com>
-:toc: macro
-:icons: font
-:source-highlighter: rouge
-:experimental:
-:url-github: https://github.com/hyperpolymath/wp-sinople-theme
-:url-gitlab: https://gitlab.com/hyperpolymath/wp-sinople-theme
-:url-bitbucket: https://bitbucket.org/hyperpolymath/wp-sinople-theme
-:url-codeberg: https://codeberg.org/hyperpolymath/wp-sinople-theme
+= Sinople WordPress Theme
 
-Sinople WordPress theme package
+A modern, semantically-aware WordPress theme powered by *ReScript*, *Deno*, and *WASM*. Sinople (from the heraldic term for green) combines traditional WordPress theming with cutting-edge semantic web technologies for character relationships, glosses, and knowledge graphs.
 
-image:https://img.shields.io/badge/RSR-Certified-gold[RSR Certified]
-image:https://img.shields.io/badge/License-AGPL%20v3-blue[License]
+== Features
 
-toc::[]
+- 🧠 *Semantic Web Processing*: RDF/OWL processing via Rust WASM for construct relationships
+- 🌐 *IndieWeb Level 4*: Full Webmention and Micropub support
+- ♿ *WCAG 2.3 AAA*: Maximum accessibility compliance
+- 🔒 *Type Safety*: ReScript-only architecture (NO TypeScript)
+- ⚡ *Performance*: Rust-powered WASM semantic processor
+- 🎨 *Modern Stack*: Deno + Fresh framework for server-side rendering
+- 🤖 *Theme Transpilation System* (🚧 WIP): Automatically extract and recreate WordPress themes
+  - Web scraper with license detection
+  - Schema-based transformation (Cue/Nix)
+  - Haskell → ReScript transpiler
+  - ML-powered learning (LSM + Julia + Logtalk)
+  - See [THEME_TRANSPILATION_ARCHITECTURE.md](THEME_TRANSPILATION_ARCHITECTURE.md)
 
-== Overview
+== Quick Start
 
-wp-sinople-theme is part of the link:https://rhodium.sh[Rhodium Standard] (RSR) ecosystem.
+=== Prerequisites
 
-Domain: *software-development*
+- WordPress 6.0+
+- PHP 7.4+
+- Rust (for building WASM)
+- Deno 1.40+
+- Node.js 18+ (for ReScript)
 
-== Installation
+=== Installation
 
-[source,bash]
-----
-# Clone from GitHub (primary)
-git clone {url-github}
+1. *Clone the repository*:
+   ```bash
+   git clone https://github.com/Hyperpolymath/wp-sinople-theme.git
+   cd wp-sinople-theme
+   ```
 
-# Or from mirrors
-git clone {url-gitlab}
-git clone {url-codeberg}
-----
+2. *Build WASM module*:
+   ```bash
+   cd wasm/semantic_processor
+   cargo install wasm-pack
+   ./build.sh
+   cd ../..
+   ```
 
-== RSR Stack
+3. *Compile ReScript*:
+   ```bash
+   cd rescript
+   npm install
+   npm run build
+   cd ..
+   ```
 
-This project follows RSR conventions:
+4. *Set up WordPress*:
+   ```bash
+   # Copy wordpress/ directory to your WordPress themes folder
+   cp -r wordpress /path/to/wordpress/wp-content/themes/sinople
+   ```
 
-* ✅ ReScript for frontend/logic
-* ✅ Deno for JS runtime
-* ✅ WASM for performance-critical code
-* ✅ Rust/OCaml/Haskell for systems/proofs
-* ✅ Guile/Scheme for configuration
-* ❌ No TypeScript
-* ❌ No Go
-* ❌ No npm
+5. *Activate theme* in WordPress admin
 
-== Mirrors
+=== Development
 
-[cols="1,2"]
-|===
-| Platform | URL
+```bash
+= Build everything
+./build.sh
 
-| GitHub (primary) | {url-github}
-| GitLab | {url-gitlab}
-| Bitbucket | {url-bitbucket}
-| Codeberg | {url-codeberg}
-|===
+= Development mode (watch files)
+./dev.sh
 
-== License
+= Run tests
+cd tests
+deno test integration/
+```
 
-Licensed under AGPL-3.0-or-later OR LicenseRef-Palimpsest-0.5.
+== Project Structure
 
-See link:LICENSE[LICENSE] for details.
+```
+wp-sinople-theme/
+├── wasm/               # Rust WASM semantic processor
+├── rescript/           # ReScript source code
+├── deno/               # Deno + Fresh application
+├── wordpress/          # WordPress theme files
+├── ontology/           # RDF ontologies (Turtle format)
+├── tests/              # Integration tests
+└── docs/               # Documentation
+```
+
+== Custom Post Types
+
+=== Constructs
+Abstract concepts, entities, or ideas (e.g., "Time", "Consciousness", "Justice")
+
+=== Entanglements
+Relationships between constructs (e.g., "Time → Space", "Consciousness → Free Will")
+
+== IndieWeb Features
+
+- *Webmention*: `/wp-json/sinople/v1/webmention`
+- *Micropub*: `/wp-json/sinople/v1/micropub`
+- *Microformats2*: All posts include h-entry markup
+
+== Semantic Web APIs
+
+- *Semantic Graph*: `/wp-json/sinople/v1/semantic-graph`
+- *RDF Export*: `/wp-json/sinople/v1/constructs/{id}/rdf`
+- *Full Ontology*: `/wp-json/sinople/v1/ontology`
+
+== Accessibility
+
+Sinople meets *WCAG 2.3 AAA* standards:
+
+- 7:1 contrast ratio for normal text
+- Full keyboard navigation support
+- Screen reader optimized
+- Respects `prefers-reduced-motion`
+- Skip links to main content
+- Semantic HTML5 markup
+
+== Browser Support
+
+- Chrome/Edge 90+
+- Firefox 88+
+- Safari 14+
 
 == Contributing
 
-See link:CONTRIBUTING.adoc[CONTRIBUTING.adoc].
+We welcome contributions! See [CONTRIBUTING.md](CONTRIBUTING.md) for:
+- Development guidelines
+- Tri-Perimeter Contribution Framework (TPCF)
+- Code style and commit conventions
+- Pull request process
 
-== Metadata
+Please also review our [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
 
-* Domain: software-development
-* Framework: RSR (Rhodium Standard Repository)
-* Dublin Core: link:.well-known/dc.xml[.well-known/dc.xml]
+== Documentation
+
+=== User Documentation
+- *[USAGE.md](USAGE.md)*: Developer usage guide
+- *[ROADMAP.md](ROADMAP.md)*: Development roadmap
+- *[STACK.md](STACK.md)*: Technical stack details
+- *[CHANGELOG.md](CHANGELOG.md)*: Version history and release notes
+
+=== Project Governance
+- *[CONTRIBUTING.md](CONTRIBUTING.md)*: Contribution guidelines and TPCF
+- *[CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)*: Community standards
+- *[SECURITY.md](SECURITY.md)*: Security policy and vulnerability reporting
+- *[MAINTAINERS.md](MAINTAINERS.md)*: Project maintainers and governance
+- *[TPCF.md](TPCF.md)*: Tri-Perimeter Contribution Framework details
+
+=== Development
+- *[CLAUDE.md](CLAUDE.md)*: AI assistant guidelines and architecture
+- *[RSR_AUDIT.md](RSR_AUDIT.md)*: Rhodium Standard Repository compliance audit
+
+== Security
+
+Security vulnerabilities can be reported via:
+- Email: security@sinople.org
+- Security policy: [SECURITY.md](SECURITY.md)
+- Security.txt: [/.well-known/security.txt](.well-known/security.txt)
+
+We follow coordinated disclosure practices with 24-hour acknowledgment and 7-day patch timelines.
+
+== License
+
+*Dual Licensed* - Choose either:
+
+- *MIT License* (OSI-approved, permissive)
+- *Palimpsest License v0.8* (political autonomy focus)
+
+See [LICENSE.txt](LICENSE.txt) for full terms.
+
+*SPDX-License-Identifier*: `MIT OR Palimpsest-0.8`
+
+== Standards Compliance
+
+- ✅ *RSR Bronze Level*: ~75% Rhodium Standard Repository compliance
+- ✅ *WCAG 2.3 AAA*: Maximum web accessibility
+- ✅ *IndieWeb Level 4*: Webmention + Micropub
+- ✅ *Semantic Versioning 2.0.0*: Version management
+- ✅ *Conventional Commits*: Commit message format
+- ✅ *RFC 9116*: security.txt implementation
+
+== Credits
+
+*Development*: Claude Code (Anthropic) + Human collaboration
+*License*: MIT OR Palimpsest-0.8
+*Humans*: See [.well-known/humans.txt](.well-known/humans.txt)
+*AI Policy*: See [.well-known/ai.txt](.well-known/ai.txt)
