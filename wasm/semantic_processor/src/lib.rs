@@ -112,11 +112,11 @@ impl SemanticProcessor {
         let mut namespaces = HashMap::new();
 
         // Register common namespaces
-        namespaces.insert("sn".to_string(), "http://sinople.org/ontology#".to_string());
-        namespaces.insert("rdf".to_string(), "http://www.w3.org/1999/02/22-rdf-syntax-ns#".to_string());
-        namespaces.insert("rdfs".to_string(), "http://www.w3.org/2000/01/rdf-schema#".to_string());
-        namespaces.insert("owl".to_string(), "http://www.w3.org/2002/07/owl#".to_string());
-        namespaces.insert("xsd".to_string(), "http://www.w3.org/2001/XMLSchema#".to_string());
+        namespaces.insert("sn".to_string(), "https://sinople.org/ontology#".to_string());
+        namespaces.insert("rdf".to_string(), "https://www.w3.org/1999/02/22-rdf-syntax-ns#".to_string());
+        namespaces.insert("rdfs".to_string(), "https://www.w3.org/2000/01/rdf-schema#".to_string());
+        namespaces.insert("owl".to_string(), "https://www.w3.org/2002/07/owl#".to_string());
+        namespaces.insert("xsd".to_string(), "https://www.w3.org/2001/XMLSchema#".to_string());
 
         SemanticProcessor {
             graph: FastGraph::new(),
@@ -483,10 +483,10 @@ mod tests {
     fn test_load_simple_turtle() {
         let mut processor = SemanticProcessor::new();
         let ttl = r#"
-            @prefix sn: <http://sinople.org/ontology#> .
-            @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+            @prefix sn: <https://sinople.org/ontology#> .
+            @prefix rdfs: <https://www.w3.org/2000/01/rdf-schema#> .
 
-            <http://example.org/test> a sn:Construct ;
+            <https://example.org/test> a sn:Construct ;
                 rdfs:label "Test Construct" .
         "#;
 

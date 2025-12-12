@@ -241,7 +241,7 @@ mod tests {
     #[test]
     fn test_parse_turtle() {
         let processor = SemanticProcessor::new();
-        let ttl = "@prefix sn: <http://sinople.org/ontology#> .";
+        let ttl = "@prefix sn: <https://sinople.org/ontology#> .";
         assert!(processor.load_turtle(ttl).is_ok());
     }
 }

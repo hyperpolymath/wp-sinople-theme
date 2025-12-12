@@ -341,8 +341,8 @@ Core vocabularies defined in Turtle format:
 
 ```turtle
 # sinople.ttl
-@prefix sn: <http://sinople.org/ontology#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix sn: <https://sinople.org/ontology#> .
+@prefix owl: <https://www.w3.org/2002/07/owl#> .
 
 sn:Construct a owl:Class ;
     rdfs:label "Construct"@en ;
@@ -674,14 +674,14 @@ printf(
 
 ```turtle
 # Served at /api/void
-@prefix void: <http://rdfs.org/ns/void#> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix void: <https://rdfs.org/ns/void#> .
+@prefix dcterms: <https://purl.org/dc/terms/> .
 
-<http://sinople.org/dataset> a void:Dataset ;
+<https://sinople.org/dataset> a void:Dataset ;
     dcterms:title "Sinople Semantic Dataset" ;
-    void:feature <http://www.w3.org/ns/formats/Turtle> ;
-    void:sparqlEndpoint <http://sinople.org/api/semantic> ;
-    void:exampleResource <http://sinople.org/constructs/example> .
+    void:feature <https://www.w3.org/ns/formats/Turtle> ;
+    void:sparqlEndpoint <https://sinople.org/api/semantic> ;
+    void:exampleResource <https://sinople.org/constructs/example> .
 ```
 
 ## Git Workflow

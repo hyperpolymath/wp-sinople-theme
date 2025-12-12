@@ -66,7 +66,7 @@
    */
   function renderGraph(container, data) {
     // Create SVG element
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    const svg = document.createElementNS('https://www.w3.org/2000/svg', 'svg');
     svg.setAttribute('width', '100%');
     svg.setAttribute('height', '600');
     svg.setAttribute('role', 'img');
@@ -80,7 +80,7 @@
     const radius = Math.min(width, height) / 3;
 
     // Draw edges
-    const edgesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const edgesGroup = document.createElementNS('https://www.w3.org/2000/svg', 'g');
     edgesGroup.setAttribute('class', 'edges');
 
     data.edges.forEach(edge => {
@@ -95,7 +95,7 @@
       const sourceAngle = (sourceIndex / data.nodes.length) * 2 * Math.PI;
       const targetAngle = (targetIndex / data.nodes.length) * 2 * Math.PI;
 
-      const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+      const line = document.createElementNS('https://www.w3.org/2000/svg', 'line');
       line.setAttribute('x1', centerX + radius * Math.cos(sourceAngle));
       line.setAttribute('y1', centerY + radius * Math.sin(sourceAngle));
       line.setAttribute('x2', centerX + radius * Math.cos(targetAngle));
@@ -105,7 +105,7 @@
       line.setAttribute('opacity', '0.6');
 
       // Add title for accessibility
-      const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+      const title = document.createElementNS('https://www.w3.org/2000/svg', 'title');
       title.textContent = edge.label || 'related';
       line.appendChild(title);
 
@@ -115,7 +115,7 @@
     svg.appendChild(edgesGroup);
 
     // Draw nodes
-    const nodesGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+    const nodesGroup = document.createElementNS('https://www.w3.org/2000/svg', 'g');
     nodesGroup.setAttribute('class', 'nodes');
 
     data.nodes.forEach((node, index) => {
@@ -124,7 +124,7 @@
       const y = centerY + radius * Math.sin(angle);
 
       // Create node circle
-      const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      const circle = document.createElementNS('https://www.w3.org/2000/svg', 'circle');
       circle.setAttribute('cx', x);
       circle.setAttribute('cy', y);
       circle.setAttribute('r', '20');
@@ -145,7 +145,7 @@
       });
 
       // Create node label
-      const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+      const text = document.createElementNS('https://www.w3.org/2000/svg', 'text');
       text.setAttribute('x', x);
       text.setAttribute('y', y + 35);
       text.setAttribute('text-anchor', 'middle');

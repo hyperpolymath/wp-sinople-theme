@@ -20,7 +20,7 @@ Title: Consciousness
 Gloss: Awareness of one's own existence and surroundings
 Complexity: 10
 Type: philosophical
-RDF IRI: http://sinople.org/constructs/consciousness
+RDF IRI: https://sinople.org/constructs/consciousness
 ```
 
 ## Creating Entanglements
