@@ -1,37 +1,79 @@
-# Build outputs
-/build/
-/wordpress/assets/wasm/
-/wordpress/assets/js/*.res.js
+# SPDX-License-Identifier: AGPL-3.0-or-later
+# RSR-compliant .gitignore
 
-# WASM
-/wasm/semantic_processor/target/
-/wasm/semantic_processor/pkg/
-
-# ReScript
-/rescript/node_modules/
-/rescript/lib/
-/rescript/.bsb.lock
-
-# Deno
-/deno/.deno/
-
-# WordPress
-/wordpress/screenshot.png
-
-# OS
+# OS & Editor
 .DS_Store
 Thumbs.db
-
-# IDE
-.vscode/
-.idea/
 *.swp
 *.swo
+*~
+.idea/
+.vscode/
+
+# Build
+/target/
+/_build/
+/build/
+/dist/
+/out/
+
+# Dependencies
+/node_modules/
+/vendor/
+/deps/
+/.elixir_ls/
+
+# Rust
+# Cargo.lock  # Keep for binaries
+
+# Elixir
+/cover/
+/doc/
+*.ez
+erl_crash.dump
+
+# Julia
+*.jl.cov
+*.jl.mem
+/Manifest.toml
+
+# ReScript
+/lib/bs/
+/.bsb.lock
+
+# Python (SaltStack only)
+__pycache__/
+*.py[cod]
+.venv/
+
+# Ada/SPARK
+*.ali
+/obj/
+/bin/
+
+# Haskell
+/.stack-work/
+/dist-newstyle/
+
+# Chapel
+*.chpl.tmp.*
+
+# Secrets
+.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# Test/Coverage
+/coverage/
+htmlcov/
 
 # Logs
 *.log
-npm-debug.log*
+/logs/
 
-# Environment
-.env
-.env.local
+# Temp
+/tmp/
+*.tmp
+*.bak
