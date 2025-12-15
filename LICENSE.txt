@@ -1,12 +1,19 @@
-Sinople WordPress Theme - Dual License
-
-This software is available under EITHER of the following licenses, at your option:
+SPDX-License-Identifier: MIT OR AGPL-3.0-or-later
+SPDX-FileCopyrightText: 2024-2025 hyperpolymath
 
 ================================================================================
-LICENSE A: MIT License
+DUAL LICENSE: MIT OR AGPL-3.0-or-later
 ================================================================================
 
-Copyright (c) 2025 Sinople Theme Contributors
+This project is dual-licensed under the MIT License OR the GNU Affero General
+Public License v3.0 or later. You may choose to use, copy, modify, and
+distribute this work under the terms of EITHER license (your choice).
+
+--------------------------------------------------------------------------------
+MIT LICENSE
+--------------------------------------------------------------------------------
+
+Copyright (c) 2024-2025 hyperpolymath
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -26,148 +33,59 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-================================================================================
-LICENSE B: Palimpsest License v0.8
-================================================================================
+--------------------------------------------------------------------------------
+GNU AFFERO GENERAL PUBLIC LICENSE v3.0 OR LATER
+--------------------------------------------------------------------------------
 
-Palimpsest License, Version 0.8
-A License for Politically Autonomous Software
+This program is free software: you can redistribute it and/or modify it under
+the terms of the GNU Affero General Public License as published by the Free
+Software Foundation, either version 3 of the License, or (at your option) any
+later version.
 
-Copyright (c) 2025 Sinople Theme Contributors
+This program is distributed in the hope that it will be useful, but WITHOUT
+ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more
+details.
 
-PREAMBLE
+You should have received a copy of the GNU Affero General Public License along
+with this program. If not, see <https://www.gnu.org/licenses/>.
 
-This license embodies the principle that software should be free to use,
-modify, and distribute, while respecting the autonomy and safety of all
-contributors and users, regardless of political context.
+The full text of the AGPL-3.0 is available at:
+  https://www.gnu.org/licenses/agpl-3.0.txt
 
-The term "Palimpsest" reflects that software evolves through layers of
-contribution, each building on what came before, creating a rich history
-that should be preserved and honored.
+--------------------------------------------------------------------------------
+CHOOSING YOUR LICENSE
+--------------------------------------------------------------------------------
 
-TERMS AND CONDITIONS
+You may choose to use this work under:
+  1. MIT License - Standard permissive open source license
+  2. AGPL-3.0-or-later - Copyleft license requiring source disclosure for
+     network services
 
-1. DEFINITIONS
-
-   "Work" means the software, documentation, and associated materials
-   covered by this license.
-
-   "Contributor" means any person or entity that creates or contributes
-   to the creation of the Work.
-
-   "Modification" means any change, addition, or deletion to the Work.
-
-   "Distribution" means any conveyance of the Work or Modifications to
-   another party.
-
-   "Political Context" means any governmental, organizational, or social
-   environment in which software is developed or used.
-
-2. GRANT OF RIGHTS
-
-   Subject to the terms of this license, each Contributor grants you a
-   perpetual, worldwide, non-exclusive, royalty-free license to:
-
-   a) Use the Work for any purpose
-   b) Modify the Work
-   c) Distribute the Work and Modifications
-   d) Sublicense rights under this license
-
-3. POLITICAL AUTONOMY
-
-   This Work is designed to be politically neutral and usable in any
-   Political Context. No Contributor may impose political conditions or
-   restrictions on use, modification, or distribution.
-
-   Users and contributors from all political perspectives, jurisdictions,
-   and organizational contexts are equally welcome and protected.
-
-4. ATTRIBUTION AND HISTORY
-
-   All distributions must preserve:
-
-   a) Original copyright notices
-   b) This license text
-   c) Attribution to all Contributors (via MAINTAINERS.md or equivalent)
-   d) Change history (via CHANGELOG.md or version control)
-
-   Like a palimpsest preserves layers of text, this Work preserves its
-   contribution history.
-
-5. CONTRIBUTION SAFETY
-
-   Contributors have the right to:
-
-   a) Contribute under pseudonyms or organizational identities
-   b) Revoke future use of their name in attribution (while retaining
-      code contributions)
-   c) Request removal from public contributor lists for safety reasons
-   d) Have their contributions respected regardless of political changes
-      in their jurisdiction
-
-6. NO WARRANTY
-
-   THE WORK IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-
-7. LIMITATION OF LIABILITY
-
-   IN NO EVENT SHALL ANY CONTRIBUTOR BE LIABLE FOR ANY CLAIM, DAMAGES OR
-   OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
-   ARISING FROM, OUT OF OR IN CONNECTION WITH THE WORK OR THE USE OR OTHER
-   DEALINGS IN THE WORK.
-
-8. MODIFICATION OF LICENSE
-
-   This license may not be modified for existing versions of the Work.
-   Future versions of the Work may adopt newer versions of the Palimpsest
-   License or alternative licenses as determined by the maintainers.
-
-9. COMPATIBILITY
-
-   This license is compatible with the MIT License, Apache License 2.0,
-   and other permissive open source licenses. Works combining code under
-   this license with code under those licenses may be distributed under
-   either license at the distributor's option.
-
-10. TERMINATION
-
-    Your rights under this license terminate automatically if you violate
-    any of its terms. However, rights of parties who have received copies
-    or rights from you do not terminate.
-
-END OF TERMS AND CONDITIONS
+For most uses, MIT License provides maximum flexibility.
+For ensuring open source remains open (especially for SaaS/network services),
+AGPL-3.0-or-later provides stronger protections.
 
 ================================================================================
-
-How to Apply This License:
-
-To apply the Palimpsest License to your work, attach the following notice:
-
-   Copyright (c) [year] [name of copyright holder]
-
-   This work is dual-licensed under the MIT License and the Palimpsest
-   License v0.8. You may choose which license to follow.
-
-   SPDX-License-Identifier: MIT OR Palimpsest-0.8
-
+PALIMPSEST PHILOSOPHICAL OVERLAY (NON-BINDING)
 ================================================================================
 
-RATIONALE
+This project encourages (but does not legally require) adherence to the
+principles of the Palimpsest License - a framework for consent-based digital
+interaction and the future web.
 
-The Palimpsest License exists because:
+Core Principles (Encouraged):
+  - Respect for emotional and creative lineage
+  - Transparent AI training practices with explicit consent
+  - Preservation of metadata and attribution
+  - Protection of narrative intent and cultural context
 
-1. Software development transcends political boundaries
-2. Contributors deserve safety regardless of geopolitical changes
-3. Attribution should honor history while protecting individuals
-4. Political neutrality enables universal access and contribution
-5. Open source should be truly open to all humans
+The Palimpsest principles represent our vision for a consent-based internet.
+While not legally binding for use of this software, we encourage all users
+and contributors to familiarize themselves with these principles.
 
-This license enables cooperation across political divides while protecting
-individual contributors from political retribution or forced association.
+Learn more: https://github.com/hyperpolymath/palimpsest-license
 
 ================================================================================
-
-For more information: https://github.com/palimpsest-license/
-Version: 0.8 (2025-11-22)
+END OF LICENSE
+================================================================================
