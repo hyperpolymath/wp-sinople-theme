@@ -1,18 +1,44 @@
 # Sinople Theme Roadmap
 
+> **Last Updated**: 2025-12-17
+
 > **🚧 Major Update in Progress**: Version 1.1.0 introduces the **Theme Transpilation System**, a revolutionary approach to automatically extract, analyze, and recreate WordPress themes using schema-based transpilation and machine learning. See [THEME_TRANSPILATION_ARCHITECTURE.md](THEME_TRANSPILATION_ARCHITECTURE.md) for details.
 
-## Version 1.0.0 (Current)
+## Version 0.1.x (Current - Foundation)
 
+### Completed ✅
+- [x] RSR (Rhodium Standard Repositories) compliance
+- [x] SCM metadata files (STATE.scm, META.scm, ECOSYSTEM.scm, guix.scm)
+- [x] Security workflows (CodeQL, PHP security, OSSF Scorecard)
+- [x] Dependabot configuration
+- [x] GitHub community files (SECURITY.md, CONTRIBUTING.md)
 - [x] Core WordPress theme structure
-- [x] Rust WASM semantic processor
-- [x] ReScript bindings
 - [x] Custom post types (Constructs, Entanglements)
-- [x] RDF/Turtle ontology support
-- [x] IndieWeb Webmention endpoint
-- [x] IndieWeb Micropub endpoint
-- [x] WCAG 2.3 AAA compliance
-- [x] Semantic graph REST API
+- [x] SPDX license headers
+
+### In Progress 🔄
+- [ ] Rust WASM semantic processor (structure ready, needs testing)
+- [ ] ReScript bindings (boilerplate created)
+- [ ] RDF/Turtle ontology files
+- [ ] IndieWeb Webmention endpoint
+- [ ] IndieWeb Micropub endpoint
+
+### Pending ⏳
+- [ ] WCAG 2.3 AAA full compliance audit
+- [ ] Semantic graph REST API
+- [ ] Integration tests
+
+## Version 1.0.0 (Target Release)
+
+- [ ] Core WordPress theme structure (fully tested)
+- [ ] Rust WASM semantic processor (production-ready)
+- [ ] ReScript bindings (complete)
+- [ ] Custom post types (Constructs, Entanglements)
+- [ ] RDF/Turtle ontology support
+- [ ] IndieWeb Webmention endpoint
+- [ ] IndieWeb Micropub endpoint
+- [ ] WCAG 2.3 AAA compliance
+- [ ] Semantic graph REST API
 
 ## Version 1.1.0 (Planned - Theme Transpilation System) 🚧
 
