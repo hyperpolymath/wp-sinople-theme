@@ -1,6 +1,6 @@
 <?php
 /**
- * Sinople Accessibility Features
+ * Accessibility Features for Sinople Theme
  *
  * WCAG 2.3 AAA compliance utilities
  *

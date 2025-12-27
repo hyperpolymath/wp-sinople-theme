@@ -1,6 +1,6 @@
 <?php
 /**
- * Sinople Custom Taxonomies
+ * Custom Taxonomies for Sinople Theme
  *
  * @package Sinople
  * @since 1.0.0

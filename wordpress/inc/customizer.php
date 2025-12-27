@@ -1,6 +1,6 @@
 <?php
 /**
- * Sinople Theme Customizer
+ * Theme Customizer for Sinople Theme
  *
  * @package Sinople
  * @since 1.0.0

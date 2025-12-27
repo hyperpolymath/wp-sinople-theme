@@ -1,6 +1,6 @@
 <?php
 /**
- * Sinople Custom Widgets
+ * Custom Widgets for Sinople Theme
  *
  * @package Sinople
  * @since 1.0.0
