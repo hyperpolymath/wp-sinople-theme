@@ -9,6 +9,8 @@
  * @since 1.0.0
  */
 
+declare(strict_types=1);
+
 // Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
@@ -114,27 +116,37 @@ function sinople_get_construct_rdf( $request ) {
     $gloss = get_post_meta( $post_id, '_sinople_gloss', true );
     $type  = get_post_meta( $post_id, '_sinople_construct_type', true );
 
+    // Get security helper for proper Turtle escaping
+    $security = sinople_security();
+
+    // Escape IRI for Turtle safety
+    $safe_iri = $security->escape_turtle_iri( $iri );
+
     // Build Turtle format RDF
     $ttl = "@prefix sn: <http://sinople.org/ontology#> .\n";
     $ttl .= "@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .\n";
     $ttl .= "@prefix dc: <http://purl.org/dc/elements/1.1/> .\n\n";
 
-    $ttl .= "<{$iri}> a sn:Construct ;\n";
-    $ttl .= "    rdfs:label \"" . addslashes( $post->post_title ) . "\"@en ;\n";
+    $ttl .= "<{$safe_iri}> a sn:Construct ;\n";
+    $ttl .= "    rdfs:label \"" . $security->escape_turtle_string( $post->post_title ) . "\"@en ;\n";
 
     if ( $post->post_excerpt ) {
-        $ttl .= "    rdfs:comment \"" . addslashes( $post->post_excerpt ) . "\"@en ;\n";
+        $ttl .= "    rdfs:comment \"" . $security->escape_turtle_string( $post->post_excerpt ) . "\"@en ;\n";
     }
 
     if ( $gloss ) {
-        $ttl .= "    sn:hasGloss \"" . addslashes( $gloss ) . "\"@en ;\n";
+        $ttl .= "    sn:hasGloss \"" . $security->escape_turtle_string( $gloss ) . "\"@en ;\n";
     }
 
     if ( $type ) {
-        $ttl .= "    sn:constructType \"{$type}\" ;\n";
+        // Validate type is a safe literal (whitelist approach for enum values)
+        $allowed_types = array( 'philosophical', 'scientific', 'mathematical', 'linguistic', 'social', 'other' );
+        if ( in_array( $type, $allowed_types, true ) ) {
+            $ttl .= "    sn:constructType \"{$type}\" ;\n";
+        }
     }
 
-    $ttl .= "    dc:identifier <{$iri}> .\n";
+    $ttl .= "    dc:identifier <{$safe_iri}> .\n";
 
     return new WP_REST_Response( $ttl, 200, array(
         'Content-Type' => 'text/turtle; charset=UTF-8',
@@ -158,10 +170,14 @@ function sinople_export_ontology( $request ) {
         'post_status'    => 'publish',
     ) );
 
+    // Get security helper for proper Turtle escaping
+    $security = sinople_security();
+
     foreach ( $constructs as $construct ) {
         $iri = get_post_meta( $construct->ID, '_sinople_rdf_iri', true ) ?: home_url( "/constructs/{$construct->post_name}" );
-        $ttl .= "<{$iri}> a sn:Construct ;\n";
-        $ttl .= "    rdfs:label \"" . addslashes( $construct->post_title ) . "\"@en .\n\n";
+        $safe_iri = $security->escape_turtle_iri( $iri );
+        $ttl .= "<{$safe_iri}> a sn:Construct ;\n";
+        $ttl .= "    rdfs:label \"" . $security->escape_turtle_string( $construct->post_title ) . "\"@en .\n\n";
     }
 
     return new WP_REST_Response( $ttl, 200, array(

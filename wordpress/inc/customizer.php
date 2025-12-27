@@ -1,6 +1,17 @@
 <?php
-// Sinople Theme Customizer
-if ( ! defined( 'ABSPATH' ) ) exit;
+/**
+ * Sinople Theme Customizer
+ *
+ * @package Sinople
+ * @since 1.0.0
+ */
+
+declare(strict_types=1);
+
+// Prevent direct access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 function sinople_customize_register( $wp_customize ) {
     $wp_customize->add_setting( 'sinople_high_contrast_mode', array(
