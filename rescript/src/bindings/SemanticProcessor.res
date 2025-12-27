@@ -67,8 +67,8 @@ type loadError =
   | SerializationError(string)
   | UnknownError(string)
 
-// Result alias
-type result<'a> = Result.t<'a, loadError>
+// Result alias using built-in result type
+type loadResult<'a> = result<'a, loadError>
 
 // Main processor type (opaque)
 type t
@@ -106,7 +106,7 @@ external clear: t => unit = "clear"
 /**
  * Load RDF data from Turtle format
  */
-let loadTurtle = async (processor: t, ttl: string): result<unit> => {
+let loadTurtle = async (processor: t, ttl: string): loadResult<unit> => {
   try {
     await processor->_loadTurtle(ttl)
     Ok()
@@ -123,7 +123,7 @@ let loadTurtle = async (processor: t, ttl: string): result<unit> => {
 /**
  * Query all constructs from the graph
  */
-let queryConstructs = async (processor: t): result<array<construct>> => {
+let queryConstructs = async (processor: t): loadResult<array<construct>> => {
   try {
     let constructs = await processor->_queryConstructs
     Ok(constructs)
@@ -139,7 +139,7 @@ let queryConstructs = async (processor: t): result<array<construct>> => {
 /**
  * Query all entanglements from the graph
  */
-let queryEntanglements = async (processor: t): result<array<entanglement>> => {
+let queryEntanglements = async (processor: t): loadResult<array<entanglement>> => {
   try {
     let entanglements = await processor->_queryEntanglements
     Ok(entanglements)
@@ -155,7 +155,7 @@ let queryEntanglements = async (processor: t): result<array<entanglement>> => {
 /**
  * Find relationships for a specific construct
  */
-let findRelationships = async (processor: t, constructId: string): result<array<string>> => {
+let findRelationships = async (processor: t, constructId: string): loadResult<array<string>> => {
   try {
     let relationships = await processor->_findRelationships(constructId)
     Ok(relationships)
@@ -171,7 +171,7 @@ let findRelationships = async (processor: t, constructId: string): result<array<
 /**
  * Query all characters from the graph
  */
-let queryCharacters = async (processor: t): result<array<character>> => {
+let queryCharacters = async (processor: t): loadResult<array<character>> => {
   try {
     let characters = await processor->_queryCharacters
     Ok(characters)
@@ -187,7 +187,7 @@ let queryCharacters = async (processor: t): result<array<character>> => {
 /**
  * Generate network graph for visualization
  */
-let generateNetworkGraph = async (processor: t): result<networkGraph> => {
+let generateNetworkGraph = async (processor: t): loadResult<networkGraph> => {
   try {
     let graph = await processor->_generateNetworkGraph
     Ok(graph)
@@ -223,7 +223,7 @@ let hasData = (processor: t): bool => {
 /**
  * Get construct by ID
  */
-let findConstruct = async (processor: t, constructId: string): result<option<construct>> => {
+let findConstruct = async (processor: t, constructId: string): loadResult<option<construct>> => {
   switch await queryConstructs(processor) {
   | Ok(constructs) => {
       let found = constructs->Js.Array2.find(c => c.id === constructId)
@@ -239,7 +239,7 @@ let findConstruct = async (processor: t, constructId: string): result<option<con
 let findEntanglement = async (
   processor: t,
   entanglementId: string,
-): result<option<entanglement>> => {
+): loadResult<option<entanglement>> => {
   switch await queryEntanglements(processor) {
   | Ok(entanglements) => {
       let found = entanglements->Js.Array2.find(e => e.id === entanglementId)
@@ -252,7 +252,7 @@ let findEntanglement = async (
 /**
  * Get character by ID
  */
-let findCharacter = async (processor: t, characterId: string): result<option<character>> => {
+let findCharacter = async (processor: t, characterId: string): loadResult<option<character>> => {
   switch await queryCharacters(processor) {
   | Ok(characters) => {
       let found = characters->Js.Array2.find(c => c.id === characterId)
@@ -265,7 +265,7 @@ let findCharacter = async (processor: t, characterId: string): result<option<cha
 /**
  * Initialize processor with ontology
  */
-let initWithOntology = async (ontologyTTL: string): result<t> => {
+let initWithOntology = async (ontologyTTL: string): loadResult<t> => {
   let processor = make()
 
   switch await loadTurtle(processor, ontologyTTL) {

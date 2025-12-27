@@ -47,7 +47,7 @@ let loadAndQueryConstructs = async () => {
   // Query constructs
   switch await processor->queryConstructs {
   | Ok(constructs) => {
-      Js.log(`📊 Found ${Int.toString(constructs->Js.Array2.length)} constructs:`)
+      Js.log(`📊 Found ${Belt.Int.toString(constructs->Js.Array2.length)} constructs:`)
       constructs->Js.Array2.forEach(c => {
         Js.log(`  - ${c.label} (${c.id})`)
         switch c.description {
@@ -62,7 +62,7 @@ let loadAndQueryConstructs = async () => {
   // Query entanglements
   switch await processor->queryEntanglements {
   | Ok(entanglements) => {
-      Js.log(`🔗 Found ${Int.toString(entanglements->Js.Array2.length)} entanglements:`)
+      Js.log(`🔗 Found ${Belt.Int.toString(entanglements->Js.Array2.length)} entanglements:`)
       entanglements->Js.Array2.forEach(e => {
         Js.log(`  - ${e.label}: ${e.source} → ${e.target}`)
       })
@@ -74,8 +74,8 @@ let loadAndQueryConstructs = async () => {
   switch await processor->generateNetworkGraph {
   | Ok(graph) => {
       Js.log(`🕸️  Network graph:`)
-      Js.log(`  Nodes: ${Int.toString(graph.nodes->Js.Array2.length)}`)
-      Js.log(`  Edges: ${Int.toString(graph.edges->Js.Array2.length)}`)
+      Js.log(`  Nodes: ${Belt.Int.toString(graph.nodes->Js.Array2.length)}`)
+      Js.log(`  Edges: ${Belt.Int.toString(graph.edges->Js.Array2.length)}`)
     }
   | Error(e) => Js.log2("❌ Error generating graph:", errorToString(e))
   }
@@ -93,7 +93,7 @@ let findConstructWithRelationships = async (processor: t, constructId: string) =
       // Find relationships
       switch await processor->findRelationships(constructId) {
       | Ok(relationships) => {
-          Js.log(`  Related to ${Int.toString(relationships->Js.Array2.length)} entities:`)
+          Js.log(`  Related to ${Belt.Int.toString(relationships->Js.Array2.length)} entities:`)
           relationships->Js.Array2.forEach(rel => Js.log(`    - ${rel}`))
         }
       | Error(e) => Js.log2("❌ Error finding relationships:", errorToString(e))
