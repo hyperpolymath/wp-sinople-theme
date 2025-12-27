@@ -1,6 +1,17 @@
 <?php
-// Sinople Custom Taxonomies
-if ( ! defined( 'ABSPATH' ) ) exit;
+/**
+ * Sinople Custom Taxonomies
+ *
+ * @package Sinople
+ * @since 1.0.0
+ */
+
+declare(strict_types=1);
+
+// Prevent direct access
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
 
 function sinople_register_taxonomies() {
     register_taxonomy( 'construct_type', 'sinople_construct', array(
