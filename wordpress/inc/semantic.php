@@ -217,6 +217,9 @@ function sinople_export_ontology( WP_REST_Request $request ): WP_REST_Response {
         'post_status'    => 'publish',
     ) );
 
+    // Get security helper for proper Turtle escaping
+    $security = sinople_security();
+
     foreach ( $constructs as $construct ) {
         $stored_iri = get_post_meta( $construct->ID, '_sinople_rdf_iri', true );
         $iri = $stored_iri ?: home_url( "/constructs/{$construct->post_name}" );

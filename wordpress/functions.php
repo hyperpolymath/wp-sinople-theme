@@ -226,6 +226,9 @@ add_action( 'wp_enqueue_scripts', 'sinople_enqueue_assets' );
 /**
  * Include additional functionality
  */
+// Security must be loaded first (provides sinople_security() helper)
+require_once SINOPLE_PATH . '/inc/security.php';
+
 require_once SINOPLE_PATH . '/inc/custom-post-types.php';
 require_once SINOPLE_PATH . '/inc/taxonomies.php';
 require_once SINOPLE_PATH . '/inc/widgets.php';

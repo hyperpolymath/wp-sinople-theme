@@ -267,6 +267,7 @@ function sinople_micropub_endpoint( WP_REST_Request $request ) {
     if ( $method === 'POST' ) {
         // Create post from Micropub request
         $content_type = $request->get_content_type();
+        $security = sinople_security();
 
         if ( isset( $content_type['value'] ) && $content_type['value'] === 'application/json' ) {
             $data = $request->get_json_params();
