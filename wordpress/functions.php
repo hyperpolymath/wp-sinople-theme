@@ -9,10 +9,15 @@
  * @since 1.0.0
  */
 
+declare(strict_types=1);
+
 // Prevent direct access
 if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
+
+// Load PhpAegis security library
+require_once get_template_directory() . '/vendor/php-aegis/autoload.php';
 
 // Theme constants
 define( 'SINOPLE_VERSION', '1.0.0' );
@@ -343,6 +348,69 @@ remove_action( 'wp_head', 'wp_generator' );
  * Security: Disable XML-RPC if not needed
  */
 add_filter( 'xmlrpc_enabled', '__return_false' );
+
+/**
+ * Security: Set HTTP security headers via PhpAegis
+ *
+ * Sets comprehensive security headers for defense in depth.
+ * Must run before any output is sent.
+ */
+function sinople_security_headers(): void {
+    // Don't set headers in admin or for AJAX
+    if ( is_admin() || wp_doing_ajax() ) {
+        return;
+    }
+
+    // Don't set headers if already sent
+    if ( headers_sent() ) {
+        return;
+    }
+
+    // Remove insecure headers
+    \PhpAegis\Headers::removeInsecureHeaders();
+
+    // Set Content-Type-Options
+    \PhpAegis\Headers::contentTypeOptions();
+
+    // Set Frame Options (allow same origin for embeds)
+    \PhpAegis\Headers::frameOptions( 'SAMEORIGIN' );
+
+    // Set XSS Protection (legacy browser support)
+    \PhpAegis\Headers::xssProtection();
+
+    // Set Referrer Policy
+    \PhpAegis\Headers::referrerPolicy( 'strict-origin-when-cross-origin' );
+
+    // Set HSTS (only on HTTPS)
+    if ( is_ssl() ) {
+        \PhpAegis\Headers::strictTransportSecurity( 31536000, true, false );
+    }
+
+    // Set Content Security Policy (permissive for WordPress compatibility)
+    \PhpAegis\Headers::contentSecurityPolicy( array(
+        'default-src'  => array( "'self'" ),
+        'script-src'   => array( "'self'", "'unsafe-inline'", "'unsafe-eval'" ), // WP admin needs these
+        'style-src'    => array( "'self'", "'unsafe-inline'" ),
+        'img-src'      => array( "'self'", 'data:', 'https:' ),
+        'font-src'     => array( "'self'", 'data:' ),
+        'connect-src'  => array( "'self'" ),
+        'frame-src'    => array( "'self'" ),
+        'object-src'   => array( "'none'" ),
+        'base-uri'     => array( "'self'" ),
+        'form-action'  => array( "'self'" ),
+    ) );
+
+    // Set Permissions Policy (restrict dangerous features)
+    \PhpAegis\Headers::permissionsPolicy( array(
+        'geolocation'        => array(),
+        'microphone'         => array(),
+        'camera'             => array(),
+        'payment'            => array(),
+        'usb'                => array(),
+        'interest-cohort'    => array(), // Disable FLoC
+    ) );
+}
+add_action( 'send_headers', 'sinople_security_headers' );
 
 /**
  * Performance: Defer non-critical scripts
