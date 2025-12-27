@@ -38,6 +38,208 @@
 └─────────────────────────────────────────────────────────┘
 ```
 
+## Architecture Boundaries
+
+This section clarifies the responsibilities and boundaries between each layer, including current implementation status.
+
+### Implementation Status Matrix
+
+| Layer | Status | Completeness | Notes |
+|-------|--------|--------------|-------|
+| **WordPress** | Production-ready | 85% | Fully functional theme with CPTs, IndieWeb, RDF endpoints |
+| **Rust/WASM** | Production-ready | 100% | Complete semantic processor with Sophia 0.8 |
+| **ReScript** | Bindings complete | 40% | WASM bindings done; components/services not started |
+| **Deno/Fresh** | Scaffolded only | 5% | Config exists; no routes or islands implemented |
+
+### Layer Responsibilities
+
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                        WORDPRESS LAYER (PHP)                                │
+│  Runtime: Apache/nginx + PHP-FPM         Location: wordpress/              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  RESPONSIBILITIES:                                                          │
+│  ✓ Content management (posts, pages, CPTs)                                 │
+│  ✓ User authentication and authorization                                    │
+│  ✓ Database operations (MySQL/MariaDB)                                     │
+│  ✓ REST API for content access                                              │
+│  ✓ HTML template rendering (traditional server-side)                       │
+│  ✓ IndieWeb endpoints (Webmention, Micropub)                               │
+│  ✓ RDF/Turtle export via REST API                                          │
+│  ✓ Security (PHP-Aegis sanitization, nonces, capabilities)                 │
+│                                                                              │
+│  DOES NOT:                                                                   │
+│  ✗ Run JavaScript/WASM processing                                           │
+│  ✗ Perform complex semantic graph queries                                   │
+│  ✗ Handle real-time updates                                                 │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ REST API (/wp-json/...)
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      DENO/FRESH LAYER (Future)                              │
+│  Runtime: Deno 1.40+                     Location: deno/                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  PLANNED RESPONSIBILITIES:                                                  │
+│  ○ Server-side rendering of enhanced pages                                 │
+│  ○ API route proxying and caching                                          │
+│  ○ Fresh Islands for interactive components                                 │
+│  ○ Edge deployment capabilities                                             │
+│  ○ Real-time subscriptions (WebSocket)                                     │
+│                                                                              │
+│  CURRENT STATUS:                                                             │
+│  ⚠ Only configuration files exist (deno.json, main.ts, dev.ts)             │
+│  ⚠ No routes/ or islands/ directories implemented                          │
+│  ⚠ lib/ has type definitions only                                          │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ ES6 Imports
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      RESCRIPT LAYER                                         │
+│  Runtime: Compiled to ES6 JS             Location: rescript/                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  IMPLEMENTED:                                                                │
+│  ✓ SemanticProcessor.res - Complete WASM bindings with types               │
+│  ✓ Type definitions: construct, entanglement, character, gloss             │
+│  ✓ Error handling wrappers                                                  │
+│  ✓ example.res - Usage demonstrations                                       │
+│                                                                              │
+│  NOT IMPLEMENTED:                                                            │
+│  ✗ UI components (Graph.res, Navigation.res, Card.res)                     │
+│  ✗ Domain models (Construct.res, Entanglement.res)                         │
+│  ✗ Service layer (SemanticService.res, WordPressService.res)               │
+│  ✗ WordPress.res and Deno.res bindings                                     │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ wasm-bindgen FFI
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                      RUST/WASM LAYER                                        │
+│  Runtime: Browser WASM or Deno           Location: wasm/semantic_processor/ │
+├─────────────────────────────────────────────────────────────────────────────┤
+│  FULLY IMPLEMENTED:                                                          │
+│  ✓ SemanticProcessor struct with FastGraph                                  │
+│  ✓ load_turtle() - Parse RDF/Turtle into in-memory graph                   │
+│  ✓ query_constructs() - Extract all construct entities                     │
+│  ✓ query_entanglements() - Extract relationships                           │
+│  ✓ query_characters() - Extract character entities                         │
+│  ✓ find_relationships(id) - Get related entities by ID                     │
+│  ✓ generate_network_graph() - Build visualization data                     │
+│  ✓ Sophia 0.8 integration (sophia_api, sophia_inmem, sophia_turtle)        │
+│                                                                              │
+│  KEY CONSTRAINT:                                                             │
+│  ⚠ Runs in browser context only (requires console object)                  │
+│  ⚠ Tests must be skipped in CLI (cargo test --lib)                         │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
+
+### Data Flow Patterns
+
+#### Pattern 1: Traditional WordPress Rendering (Currently Active)
+```
+Browser → WordPress (PHP) → MySQL → HTML Response
+                         ↳ PHP-Aegis (security)
+                         ↳ inc/semantic.php (RDF export)
+```
+This is the primary pattern today. WordPress handles all rendering.
+
+#### Pattern 2: Enhanced Client-Side Semantic (Partially Available)
+```
+Browser → WordPress REST API → JSON
+   ↓
+Browser → Load WASM Module
+   ↓
+Browser → ReScript calls WASM → Semantic Graph Data
+   ↓
+Browser → Render visualization (D3.js/Canvas)
+```
+Available now: WASM processor + ReScript bindings work.
+Missing: UI components and integration.
+
+#### Pattern 3: Deno Edge Rendering (Planned, Not Implemented)
+```
+Browser → Deno/Fresh → WordPress REST API → JSON
+                    ↳ WASM Processing
+                    ↳ SSR HTML Response
+```
+This pattern is not yet implemented. Deno layer is scaffolded only.
+
+### Communication Protocols
+
+| Source | Target | Protocol | Endpoint | Status |
+|--------|--------|----------|----------|--------|
+| Browser | WordPress | REST | `/wp-json/wp/v2/*` | ✓ Active |
+| Browser | WordPress | REST | `/wp-json/sinople/v1/semantic-graph` | ✓ Active |
+| Browser | WordPress | REST | `/wp-json/sinople/v1/rdf/*` | ✓ Active |
+| Browser | WordPress | POST | `/wp-json/sinople/v1/webmention` | ✓ Active |
+| Browser | WordPress | POST | `/wp-json/sinople/v1/micropub` | ✓ Active |
+| Browser | WASM | FFI | `wasm-bindgen` calls | ✓ Active |
+| ReScript | WASM | FFI | `@module` bindings | ✓ Active |
+| Deno | WordPress | REST | Proxy `/api/wordpress` | ○ Planned |
+| Deno | Browser | SSR | Fresh routes | ○ Planned |
+
+### Deployment Modes
+
+#### Mode A: WordPress-Only (Current Default)
+```
+┌─────────────────────────────┐
+│     Traditional LAMP/LEMP   │
+│  WordPress handles all HTML │
+│  WASM loads in browser only │
+└─────────────────────────────┘
+```
+- Install `wordpress/` as a standard WP theme
+- WASM optional client-side enhancement
+- No Deno required
+
+#### Mode B: Headless + Deno (Future)
+```
+┌─────────────────────────────┐     ┌─────────────────────────┐
+│   WordPress (Headless API)  │────▶│   Deno/Fresh (Edge)     │
+│   Content Management Only   │     │   SSR + Islands         │
+└─────────────────────────────┘     └─────────────────────────┘
+```
+- WordPress provides content API only
+- Deno handles all user-facing rendering
+- Requires implementing `deno/routes/` and `deno/islands/`
+
+### File Ownership by Layer
+
+| Files | Owned By | Can Modify |
+|-------|----------|------------|
+| `wordpress/**/*.php` | WordPress | WordPress only |
+| `wordpress/assets/css/*` | WordPress | WordPress, build scripts |
+| `wordpress/assets/js/*` | WordPress | WordPress, compiled ReScript |
+| `rescript/src/**/*.res` | ReScript | ReScript only |
+| `rescript/src/**/*.res.js` | Build | Generated (do not edit) |
+| `wasm/semantic_processor/src/*` | Rust | Rust only |
+| `wasm/semantic_processor/pkg/*` | Build | Generated (do not edit) |
+| `deno/**/*.ts` | Deno | Deno, compiled ReScript |
+| `ontology/*.ttl` | Ontology | Ontology editors |
+
+### Integration Points
+
+1. **WordPress ↔ Browser**
+   - Standard WordPress template rendering
+   - REST API endpoints for AJAX/fetch
+   - Microformats2 in HTML for IndieWeb
+
+2. **Browser ↔ WASM**
+   - JavaScript loads `semantic_processor_bg.wasm`
+   - ReScript-compiled JS calls WASM via bindings
+   - Graph data returned as JS objects (serde_wasm_bindgen)
+
+3. **WordPress ↔ RDF**
+   - `inc/semantic.php` exports content as Turtle
+   - Ontology files in `ontology/*.ttl`
+   - VoID description served at `/api/void` (planned)
+
+4. **WordPress ↔ IndieWeb**
+   - Webmention receiving at `/wp-json/sinople/v1/webmention`
+   - Micropub creation at `/wp-json/sinople/v1/micropub`
+   - Discovery links in `<head>`
+
 ## Project Structure
 
 ```
