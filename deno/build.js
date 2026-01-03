@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 /**
  * Sinople Deno Build Script
  *
@@ -14,21 +15,15 @@ const ROOT = new URL('..', import.meta.url).pathname;
 const DENO_DIR = new URL('.', import.meta.url).pathname;
 const BUILD_DIR = join(ROOT, 'build', 'deno');
 
-interface BuildConfig {
-  entryPoints: string[];
-  outDir: string;
-  minify: boolean;
-}
-
-const config: BuildConfig = {
+const config = {
   entryPoints: [
-    join(DENO_DIR, 'main.ts'),
+    join(DENO_DIR, 'main.js'),
   ],
   outDir: BUILD_DIR,
   minify: true,
 };
 
-async function clean(): Promise<void> {
+async function clean() {
   console.log('🧹 Cleaning build directory...');
   try {
     await Deno.remove(BUILD_DIR, { recursive: true });
@@ -38,7 +33,7 @@ async function clean(): Promise<void> {
   await ensureDir(BUILD_DIR);
 }
 
-async function copyStaticAssets(): Promise<void> {
+async function copyStaticAssets() {
   console.log('📋 Copying static assets...');
 
   // Copy lib/ directory if it exists
@@ -53,11 +48,11 @@ async function copyStaticAssets(): Promise<void> {
   }
 }
 
-async function bundleTypeScript(): Promise<void> {
-  console.log('📦 Bundling TypeScript files...');
+async function bundleJavaScript() {
+  console.log('📦 Bundling JavaScript files...');
 
   for (const entryPoint of config.entryPoints) {
-    const fileName = basename(entryPoint, '.ts') + '.bundle.js';
+    const fileName = basename(entryPoint, '.js') + '.bundle.js';
     const outFile = join(config.outDir, fileName);
 
     console.log(`  Bundling ${basename(entryPoint)}...`);
@@ -84,13 +79,13 @@ async function bundleTypeScript(): Promise<void> {
   }
 }
 
-async function generateManifest(): Promise<void> {
+async function generateManifest() {
   console.log('📝 Generating build manifest...');
 
   const manifest = {
     version: '1.0.0',
     buildTime: new Date().toISOString(),
-    files: [] as string[],
+    files: [],
   };
 
   for await (const entry of walk(BUILD_DIR)) {
@@ -105,7 +100,7 @@ async function generateManifest(): Promise<void> {
   );
 }
 
-async function build(): Promise<void> {
+async function build() {
   console.log('🚀 Building Sinople Deno Application');
   console.log('=====================================\n');
 
@@ -114,7 +109,7 @@ async function build(): Promise<void> {
   try {
     await clean();
     await copyStaticAssets();
-    await bundleTypeScript();
+    await bundleJavaScript();
     await generateManifest();
 
     const elapsed = ((performance.now() - start) / 1000).toFixed(2);

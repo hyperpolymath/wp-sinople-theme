@@ -1,24 +1,9 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // License Detection Module
 // Detects licenses from multiple sources: security.txt, LICENSE files, meta tags, WordPress headers
 
-export interface LicenseInfo {
-  detected: boolean;
-  type: string | null; // SPDX identifier (MIT, GPL-2.0, etc.)
-  compatible: boolean; // Compatible with MIT OR Palimpsest-0.8?
-  sources: Array<{
-    location: string;
-    content: string;
-    confidence: number; // 0.0-1.0
-  }>;
-}
-
-export interface LicenseSource {
-  location: string;
-  content: string;
-}
-
 // SPDX license patterns
-const LICENSE_PATTERNS: Record<string, RegExp[]> = {
+const LICENSE_PATTERNS = {
   "MIT": [
     /MIT License/i,
     /Permission is hereby granted, free of charge/i,
@@ -80,8 +65,8 @@ const INCOMPATIBLE_LICENSES = new Set([
 /**
  * Detect license from a URL by checking multiple sources
  */
-export async function detectLicense(url: string): Promise<LicenseInfo> {
-  const sources: LicenseSource[] = [];
+export async function detectLicense(url) {
+  const sources = [];
 
   // 1. Check /.well-known/security.txt (RFC 9116)
   try {
@@ -168,7 +153,7 @@ export async function detectLicense(url: string): Promise<LicenseInfo> {
 /**
  * Fetch /.well-known/security.txt
  */
-async function fetchSecurityTxt(url: string): Promise<string | null> {
+async function fetchSecurityTxt(url) {
   const securityUrl = new URL("/.well-known/security.txt", url).toString();
   return await fetchText(securityUrl);
 }
@@ -176,7 +161,7 @@ async function fetchSecurityTxt(url: string): Promise<string | null> {
 /**
  * Fetch text content from URL
  */
-async function fetchText(url: string): Promise<string | null> {
+async function fetchText(url) {
   try {
     const response = await fetch(url, {
       headers: {
@@ -197,7 +182,7 @@ async function fetchText(url: string): Promise<string | null> {
 /**
  * Extract license from HTML meta tags
  */
-function extractMetaLicense(html: string): string | null {
+function extractMetaLicense(html) {
   const metaRegex = /<meta\s+name=["']license["']\s+content=["']([^"']+)["']/i;
   const match = html.match(metaRegex);
   return match ? match[1] : null;
@@ -206,7 +191,7 @@ function extractMetaLicense(html: string): string | null {
 /**
  * Extract WordPress theme header from HTML
  */
-function extractWordPressHeader(html: string): string | null {
+function extractWordPressHeader(html) {
   // Look for WordPress theme info in comments or inline styles
   const wpRegex = /Theme Name:([^\n]+)|License:([^\n]+)/gi;
   const matches = html.match(wpRegex);
@@ -216,7 +201,7 @@ function extractWordPressHeader(html: string): string | null {
 /**
  * Extract license from WordPress style.css theme header
  */
-function extractWordPressLicense(styleCss: string): string | null {
+function extractWordPressLicense(styleCss) {
   // WordPress theme headers are in the first comment block
   const headerRegex = /\/\*\s*([\s\S]*?)\*\//;
   const match = styleCss.match(headerRegex);
@@ -233,7 +218,7 @@ function extractWordPressLicense(styleCss: string): string | null {
 /**
  * Analyze sources and determine license type
  */
-function analyzeSources(sources: LicenseSource[]): LicenseInfo {
+function analyzeSources(sources) {
   if (sources.length === 0) {
     return {
       detected: false,
@@ -244,12 +229,7 @@ function analyzeSources(sources: LicenseSource[]): LicenseInfo {
   }
 
   // Check each source against known license patterns
-  const detections: Array<{
-    location: string;
-    content: string;
-    type: string;
-    confidence: number;
-  }> = [];
+  const detections = [];
 
   for (const source of sources) {
     for (const [licenseType, patterns] of Object.entries(LICENSE_PATTERNS)) {
@@ -305,7 +285,7 @@ function analyzeSources(sources: LicenseSource[]): LicenseInfo {
 /**
  * Check if a license is compatible with extraction
  */
-export function isLicenseCompatible(licenseType: string | null): boolean {
+export function isLicenseCompatible(licenseType) {
   if (!licenseType) return false;
   return COMPATIBLE_LICENSES.has(licenseType);
 }
@@ -313,7 +293,7 @@ export function isLicenseCompatible(licenseType: string | null): boolean {
 /**
  * Format license info for human-readable output
  */
-export function formatLicenseInfo(info: LicenseInfo): string {
+export function formatLicenseInfo(info) {
   if (!info.detected) {
     return "❌ No license detected\nFound sources:\n" +
       info.sources.map(s => `  - ${s.location}`).join("\n");

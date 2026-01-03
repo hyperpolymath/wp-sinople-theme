@@ -1,24 +1,18 @@
 #!/usr/bin/env -S deno run --allow-net --allow-write --allow-read
+// SPDX-License-Identifier: AGPL-3.0-or-later
 
 // Theme Extraction CLI Tool
-// Usage: ./cli/extract-theme.ts --url <URL> --output <FILE>
+// Usage: ./cli/extract-theme.js --url <URL> --output <FILE>
 
 import { parseArgs } from "https://deno.land/std@0.208.0/cli/parse_args.ts";
-import { extractWebsite } from "../deno/lib/scraper/mod.ts";
-import { formatLicenseInfo } from "../deno/lib/license-detector/mod.ts";
-
-interface CLIArgs {
-  url?: string;
-  output?: string;
-  format?: "json" | "cue" | "nix";
-  help?: boolean;
-}
+import { extractWebsite } from "../deno/lib/scraper/mod.js";
+import { formatLicenseInfo } from "../deno/lib/license-detector/mod.js";
 
 const HELP_TEXT = `
 Theme Extraction Tool - Sinople WordPress Theme
 
 USAGE:
-  ./cli/extract-theme.ts --url <URL> --output <FILE> [--format <FORMAT>]
+  ./cli/extract-theme.js --url <URL> --output <FILE> [--format <FORMAT>]
 
 OPTIONS:
   --url <URL>         URL of the website to extract
@@ -28,18 +22,18 @@ OPTIONS:
 
 EXAMPLES:
   # Extract Twenty Twenty-Four theme
-  ./cli/extract-theme.ts \\
+  ./cli/extract-theme.js \\
     --url https://wordpress.org/themes/twentytwentyfour/ \\
     --output ./extracted/twentytwentyfour.json
 
   # Extract with Cue schema output
-  ./cli/extract-theme.ts \\
+  ./cli/extract-theme.js \\
     --url https://indieweb.org \\
     --output ./extracted/indieweb.cue \\
     --format cue
 
   # Extract IndieWeb theme
-  ./cli/extract-theme.ts \\
+  ./cli/extract-theme.js \\
     --url https://github.com/raamdev/independent-publisher \\
     --output ./extracted/independent-publisher.json
 
@@ -53,7 +47,7 @@ LEARN MORE:
 `;
 
 async function main() {
-  const args = parseArgs(Deno.args) as CLIArgs;
+  const args = parseArgs(Deno.args);
 
   if (args.help || !args.url || !args.output) {
     console.log(HELP_TEXT);
@@ -87,7 +81,7 @@ async function main() {
     console.log(`  Scripts: ${result.assets.scripts.length}`);
 
     // Save output
-    let output: string;
+    let output;
 
     if (format === "json") {
       output = JSON.stringify(result, null, 2);
@@ -116,7 +110,7 @@ async function main() {
 /**
  * Convert extraction result to Cue schema
  */
-function convertToCue(result: any): string {
+function convertToCue(result) {
   return `// Auto-generated Cue schema
 // Extracted from: ${result.url}
 // Date: ${result.extractedAt}
@@ -168,7 +162,7 @@ theme: {
 /**
  * Convert extraction result to Nix expression
  */
-function convertToNix(result: any): string {
+function convertToNix(result) {
   return `# Auto-generated Nix schema
 # Extracted from: ${result.url}
 # Date: ${result.extractedAt}

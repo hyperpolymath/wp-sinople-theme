@@ -1,93 +1,14 @@
+// SPDX-License-Identifier: AGPL-3.0-or-later
 // Web Scraper Module
 // Extracts design patterns, structure, and assets from websites
 
-import { DOMParser, Element } from "https://deno.land/x/deno_dom@v0.1.43/deno-dom-wasm.ts";
-import { detectLicense, type LicenseInfo } from "../license-detector/mod.ts";
-
-export interface ElementNode {
-  tag: string;
-  classes: string[];
-  id?: string;
-  attributes: Record<string, string>;
-  children: ElementNode[];
-  textContent?: string;
-}
-
-export interface DOMStructure {
-  hierarchy: {
-    header: ElementNode | null;
-    navigation: ElementNode | null;
-    main: ElementNode | null;
-    sidebar?: ElementNode | null;
-    footer: ElementNode | null;
-  };
-  semanticTags: string[];
-  ariaLandmarks: Array<{ role: string; label: string }>;
-  microformats: Array<{ type: string; properties: Record<string, unknown> }>;
-}
-
-export interface DesignTokens {
-  colors: {
-    primary: string[];
-    secondary: string[];
-    text: string[];
-    background: string[];
-    accent: string[];
-  };
-  typography: {
-    families: string[];
-    sizes: { base: string; scale: number[] };
-    lineHeights: number[];
-    weights: number[];
-  };
-  spacing: {
-    scale: number[];
-  };
-  breakpoints: {
-    mobile?: string;
-    tablet?: string;
-    desktop?: string;
-  };
-  layout: {
-    maxWidth?: string;
-    gridColumns?: number;
-    gridGap?: string;
-  };
-}
-
-export interface AssetCatalog {
-  images: Array<{
-    url: string;
-    alt: string;
-    purpose: "logo" | "icon" | "background" | "content";
-    dimensions?: { width: number; height: number };
-  }>;
-  fonts: Array<{
-    family: string;
-    weights: number[];
-    source: "google-fonts" | "local" | "cdn";
-  }>;
-  scripts: Array<{
-    url: string;
-    purpose: string;
-  }>;
-}
-
-export interface ExtractionResult {
-  url: string;
-  license: LicenseInfo;
-  domStructure: DOMStructure;
-  designTokens: DesignTokens;
-  assets: AssetCatalog;
-  rawHTML: string;
-  rawCSS: string[];
-  extractedAt: string;
-}
+import { DOMParser } from "https://deno.land/x/deno_dom@v0.1.43/deno-dom-wasm.ts";
+import { detectLicense } from "../license-detector/mod.js";
 
 /**
  * Main extraction function
  */
-export async function extractWebsite(url: string): Promise<ExtractionResult> {
+export async function extractWebsite(url) {
   console.log(`🔍 Extracting website: ${url}`);
 
   // 1. Detect license
@@ -149,7 +70,7 @@ export async function extractWebsite(url: string): Promise<ExtractionResult> {
 /**
  * Analyze DOM structure
  */
-async function analyzeDOMStructure(html: string): Promise<DOMStructure> {
+async function analyzeDOMStructure(html) {
   const doc = new DOMParser().parseFromString(html, "text/html");
 
   if (!doc) {
@@ -174,11 +95,11 @@ async function analyzeDOMStructure(html: string): Promise<DOMStructure> {
 
   return {
     hierarchy: {
-      header: header ? extractElement(header as Element) : null,
-      navigation: nav ? extractElement(nav as Element) : null,
-      main: main ? extractElement(main as Element) : null,
-      sidebar: aside ? extractElement(aside as Element) : null,
-      footer: footer ? extractElement(footer as Element) : null,
+      header: header ? extractElement(header) : null,
+      navigation: nav ? extractElement(nav) : null,
+      main: main ? extractElement(main) : null,
+      sidebar: aside ? extractElement(aside) : null,
+      footer: footer ? extractElement(footer) : null,
     },
     semanticTags,
     ariaLandmarks,
@@ -189,8 +110,8 @@ async function analyzeDOMStructure(html: string): Promise<DOMStructure> {
 /**
  * Extract element node recursively
  */
-function extractElement(el: Element): ElementNode {
-  const attributes: Record<string, string> = {};
+function extractElement(el) {
+  const attributes = {};
 
   // Extract all attributes
   for (const attr of el.attributes) {
@@ -202,7 +123,7 @@ function extractElement(el: Element): ElementNode {
     classes: Array.from(el.classList),
     id: el.id || undefined,
     attributes,
-    children: Array.from(el.children).map(child => extractElement(child as Element)),
+    children: Array.from(el.children).map(child => extractElement(child)),
     textContent: el.textContent?.trim().substring(0, 100), // Truncate long text
   };
 }
@@ -210,7 +131,7 @@ function extractElement(el: Element): ElementNode {
 /**
  * Extract all semantic HTML5 tags used
  */
-function extractSemanticTags(doc: Document): string[] {
+function extractSemanticTags(doc) {
   const semanticElements = [
     "article",
     "aside",
@@ -227,7 +148,7 @@ function extractSemanticTags(doc: Document): string[] {
     "time",
   ];
 
-  const found: string[] = [];
+  const found = [];
 
   for (const tag of semanticElements) {
     const elements = doc.querySelectorAll(tag);
@@ -242,8 +163,8 @@ function extractSemanticTags(doc: Document): string[] {
 /**
  * Extract ARIA landmarks
  */
-function extractARIALandmarks(doc: Document): Array<{ role: string; label: string }> {
-  const landmarks: Array<{ role: string; label: string }> = [];
+function extractARIALandmarks(doc) {
+  const landmarks = [];
 
   const elementsWithRole = doc.querySelectorAll("[role]");
 
@@ -262,8 +183,8 @@ function extractARIALandmarks(doc: Document): Array<{ role: string; label: strin
 /**
  * Extract microformats (h-entry, h-card, etc.)
  */
-function extractMicroformats(doc: Document): Array<{ type: string; properties: Record<string, unknown> }> {
-  const microformats: Array<{ type: string; properties: Record<string, unknown> }> = [];
+function extractMicroformats(doc) {
+  const microformats = [];
 
   // Look for microformats2 classes (h-entry, h-card, etc.)
   const mfElements = doc.querySelectorAll("[class*='h-']");
@@ -273,7 +194,7 @@ function extractMicroformats(doc: Document): Array<{ type: string; properties: R
     const mfClass = classes.find(c => c.startsWith("h-"));
 
     if (mfClass) {
-      const properties: Record<string, unknown> = {};
+      const properties = {};
 
       // Extract property classes (p-name, u-url, dt-published, etc.)
       const propElements = el.querySelectorAll("[class*='p-'], [class*='u-'], [class*='dt-'], [class*='e-']");
@@ -302,8 +223,8 @@ function extractMicroformats(doc: Document): Array<{ type: string; properties: R
 /**
  * Extract CSS from HTML (inline, style tags, linked stylesheets)
  */
-async function extractCSS(html: string, baseUrl: string): Promise<string[]> {
-  const cssFiles: string[] = [];
+async function extractCSS(html, baseUrl) {
+  const cssFiles = [];
 
   // Parse HTML to find <link rel="stylesheet"> tags
   const linkRegex = /<link[^>]+rel=["']stylesheet["'][^>]*href=["']([^"']+)["']/gi;
@@ -338,7 +259,7 @@ async function extractCSS(html: string, baseUrl: string): Promise<string[]> {
 /**
  * Extract design tokens from CSS
  */
-async function extractDesignTokens(cssFiles: string[]): Promise<DesignTokens> {
+async function extractDesignTokens(cssFiles) {
   const allCSS = cssFiles.join("\n");
 
   // Extract colors (hex, rgb, rgba, hsl)
@@ -391,13 +312,7 @@ async function extractDesignTokens(cssFiles: string[]): Promise<DesignTokens> {
 /**
  * Categorize colors into primary, secondary, text, background, accent
  */
-function categorizeColors(colors: string[]): {
-  primary: string[];
-  secondary: string[];
-  text: string[];
-  background: string[];
-  accent: string[];
-} {
+function categorizeColors(colors) {
   // Simple heuristic categorization (can be improved with ML)
   return {
     primary: colors.slice(0, 3),
@@ -411,7 +326,7 @@ function categorizeColors(colors: string[]): {
 /**
  * Detect modular scale from font sizes
  */
-function detectModularScale(sizes: string[]): number[] {
+function detectModularScale(sizes) {
   // Convert to rem values and extract scale
   const remSizes = sizes
     .filter(s => s.includes("rem") || s.includes("px"))
@@ -432,7 +347,7 @@ function detectModularScale(sizes: string[]): number[] {
 /**
  * Extract assets (images, fonts, scripts)
  */
-async function extractAssets(html: string, baseUrl: string): Promise<AssetCatalog> {
+async function extractAssets(html, baseUrl) {
   // Extract images
   const imgRegex = /<img[^>]+src=["']([^"']+)["'][^>]*alt=["']([^"']*)["']/gi;
   const images = Array.from(html.matchAll(imgRegex)).map(match => ({
@@ -449,7 +364,7 @@ async function extractAssets(html: string, baseUrl: string): Promise<AssetCatalo
   const fonts = fontMatches.map(match => ({
     family: extractFontFamily(match[1]),
     weights: [400, 700], // Common default weights
-    source: match[1].includes("fonts.googleapis.com") ? "google-fonts" as const : "cdn" as const,
+    source: match[1].includes("fonts.googleapis.com") ? "google-fonts" : "cdn",
   }));
 
   // Extract scripts
@@ -466,7 +381,7 @@ async function extractAssets(html: string, baseUrl: string): Promise<AssetCatalo
   };
 }
 
-function determineImagePurpose(src: string, alt: string): "logo" | "icon" | "background" | "content" {
+function determineImagePurpose(src, alt) {
   const lowerSrc = src.toLowerCase();
   const lowerAlt = alt.toLowerCase();
 
@@ -477,12 +392,12 @@ function determineImagePurpose(src: string, alt: string): "logo" | "icon" | "bac
   return "content";
 }
 
-function extractFontFamily(url: string): string {
+function extractFontFamily(url) {
   const familyMatch = url.match(/family=([^:&]+)/);
   return familyMatch ? familyMatch[1].replace(/\+/g, " ") : "Unknown";
 }
 
-function determineScriptPurpose(src: string): string {
+function determineScriptPurpose(src) {
   const lowerSrc = src.toLowerCase();
 
   if (lowerSrc.includes("jquery")) return "jQuery library";
