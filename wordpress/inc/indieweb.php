@@ -219,17 +219,85 @@ function sinople_micropub_permission( WP_REST_Request $request ) {
 
     $token = $matches[1];
 
-    // TODO: Implement full IndieAuth token verification
-    // For now, this is a placeholder that should be replaced with:
-    // 1. Verify token with token endpoint
-    // 2. Check token has required scopes (create, update, delete)
-    // 3. Verify token is for this site
-    //
-    // See: https://indieweb.org/IndieAuth
-    //
-    // SECURITY WARNING: This is not production-ready!
-    // In production, uncomment the following and implement verification:
-    // return new WP_Error( 'not_implemented', 'Token verification not implemented', array( 'status' => 501 ) );
+    // Verify token with IndieAuth token endpoint
+    // https://indieweb.org/IndieAuth
+    $token_endpoint = apply_filters( 'sinople_indieauth_token_endpoint', 'https://tokens.indieauth.com/token' );
+
+    $response = wp_remote_get( $token_endpoint, array(
+        'headers' => array(
+            'Authorization' => 'Bearer ' . $token,
+            'Accept'        => 'application/json',
+        ),
+        'timeout' => 10,
+    ) );
+
+    if ( is_wp_error( $response ) ) {
+        return new WP_Error(
+            'token_verification_failed',
+            'Could not verify token: ' . $response->get_error_message(),
+            array( 'status' => 502 )
+        );
+    }
+
+    $status_code = wp_remote_retrieve_response_code( $response );
+    if ( 200 !== $status_code ) {
+        return new WP_Error(
+            'invalid_token',
+            'Token verification failed',
+            array( 'status' => 401 )
+        );
+    }
+
+    $body = wp_remote_retrieve_body( $response );
+    $token_data = json_decode( $body, true );
+
+    if ( ! $token_data || ! isset( $token_data['me'] ) ) {
+        return new WP_Error(
+            'invalid_token_response',
+            'Invalid token endpoint response',
+            array( 'status' => 401 )
+        );
+    }
+
+    // Verify the token is for this site
+    $site_url  = trailingslashit( home_url() );
+    $token_url = trailingslashit( $token_data['me'] );
+
+    if ( strcasecmp( $site_url, $token_url ) !== 0 ) {
+        return new WP_Error(
+            'token_site_mismatch',
+            'Token is not valid for this site',
+            array( 'status' => 403 )
+        );
+    }
+
+    // Check required scopes for Micropub
+    $scopes = isset( $token_data['scope'] ) ? explode( ' ', $token_data['scope'] ) : array();
+    $required_scopes = array( 'create' );
+
+    // Allow write to substitute for create
+    if ( in_array( 'write', $scopes, true ) ) {
+        $scopes[] = 'create';
+        $scopes[] = 'update';
+        $scopes[] = 'delete';
+    }
+
+    foreach ( $required_scopes as $required ) {
+        if ( ! in_array( $required, $scopes, true ) ) {
+            return new WP_Error(
+                'insufficient_scope',
+                'Token lacks required scope: ' . $required,
+                array( 'status' => 403 )
+            );
+        }
+    }
+
+    // Store token data for use in the request
+    $request = func_num_args() > 0 ? func_get_arg( 0 ) : null;
+    if ( $request instanceof WP_REST_Request ) {
+        $request->set_param( '_indieauth_me', $token_data['me'] );
+        $request->set_param( '_indieauth_scope', $scopes );
+    }
 
     return true;
 }
