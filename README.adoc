@@ -172,7 +172,7 @@ We follow coordinated disclosure practices with 24-hour acknowledgment and 7-day
 
 *Dual Licensed* - Choose either:
 
-- *MIT License* (OSI-approved, permissive)
+- *Palimpsest-MPL-1.0 License* (OSI-approved, permissive)
 - *Palimpsest License v0.8* (political autonomy focus)
 
 See [LICENSE.txt](LICENSE.txt) for full terms.
